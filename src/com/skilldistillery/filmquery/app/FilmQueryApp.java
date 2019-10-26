@@ -1,10 +1,12 @@
 package com.skilldistillery.filmquery.app;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.skilldistillery.filmquery.database.DatabaseAccessor;
 import com.skilldistillery.filmquery.database.DatabaseAccessorObject;
+import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
 
 public class FilmQueryApp {
@@ -13,14 +15,7 @@ public class FilmQueryApp {
 
 	public static void main(String[] args) throws SQLException {
 		FilmQueryApp app = new FilmQueryApp();
-//		app.test();
-    app.launch();
-	}
-
-	private void test() throws SQLException {
-//	  System.out.println(db.findActorsByFilmId(1));
-		Film film = db.findFilmById(1);
-		System.out.println(film);
+		app.launch();
 	}
 
 	private void launch() {
@@ -32,8 +27,9 @@ public class FilmQueryApp {
 	}
 
 	private void startUserInterface(Scanner input) {
+		Scanner sc = new Scanner(System.in);
 		int user;
-		System.out.println("MENU");
+		System.out.println("\nMENU");
 		System.out.println("1. Look up film by ID");
 		System.out.println("2. Look up a film by search keyword");
 		System.out.println("3. Exit the application");
@@ -44,12 +40,36 @@ public class FilmQueryApp {
 		case 1:
 			int id;
 			System.out.print("Enter film id: ");
+
+			
 			id = input.nextInt();
 			Film film = db.findFilmById(id);
-			System.out.println(film);
+			if (film == null) {
+				System.out.println("There are no films have that id\n");
+			} else {
+				System.out.println(film);
+			}
 			startUserInterface(input);
 			break;
 		case 2:
+			String search;
+			System.out.print("Enter search crtiteria: ");
+			search = sc.nextLine();
+			List<Film> f = db.search(search);
+			if (f == null) {
+				System.out.println("Try something else\n");
+			} else {
+				for (Film f2 : f) {
+					System.out.println(f2);
+					for (Actor a : f2.getActor()) {
+						System.out.println(a);
+					}
+				}
+
+			}
+
+			startUserInterface(input);
+
 			break;
 		case 3:
 			System.out.println("exiting");
@@ -59,6 +79,7 @@ public class FilmQueryApp {
 			startUserInterface(input);
 			break;
 		}
+		sc.close();
 
 	}
 
