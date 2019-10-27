@@ -31,7 +31,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film = new Film(rs.getInt("id"), rs.getString("title"), rs.getString("description"),
 						rs.getInt("release_year"), rs.getString("name"), rs.getInt("rental_duration"),
 						rs.getDouble("rental_rate"), rs.getInt("length"), rs.getDouble("replacement_cost"),
-						rs.getString("rating"), rs.getString("special_features"));
+						rs.getString("rating"), rs.getString("special_features"),findActorsByFilmId(rs.getInt("film.id")));
+				
 			}
 			rs.close();
 			stmt.close();
@@ -121,6 +122,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 						findActorsByFilmId(rs.getInt("film.id")));
 				film.add(fil);
 			}
+			
 			rs.close();
 			stmt.close();
 			conn.close();
@@ -128,6 +130,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	
 		if (film.size() < 1)
 			return null;
 		else {

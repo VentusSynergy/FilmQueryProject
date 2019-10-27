@@ -1,6 +1,7 @@
 package com.skilldistillery.filmquery.app;
 
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,60 +28,87 @@ public class FilmQueryApp {
 	}
 
 	private void startUserInterface(Scanner input) {
-		Scanner sc = new Scanner(System.in);
-		int user;
+		int user = 0;
 		System.out.println("\nMENU");
 		System.out.println("1. Look up film by ID");
 		System.out.println("2. Look up a film by search keyword");
 		System.out.println("3. Exit the application");
 		System.out.println();
-		user = input.nextInt();
+		try {
+			user = input.nextInt();
+		} catch (InputMismatchException e) {
+			input.nextLine();
+			System.out.println();
+		}
 
 		switch (user) {
 		case 1:
-			int id;
-			System.out.print("Enter film id: ");
+			filmById(input);
 
-			
-			id = input.nextInt();
-			Film film = db.findFilmById(id);
-			if (film == null) {
-				System.out.println("There are no films have that id\n");
-			} else {
-				System.out.println(film);
-			}
-			startUserInterface(input);
 			break;
 		case 2:
+			Scanner sc = new Scanner(System.in);
 			String search;
-			System.out.print("Enter search crtiteria: ");
+			System.out.print("Enter search criteria: ");
 			search = sc.nextLine();
+			System.out.println();
 			List<Film> f = db.search(search);
 			if (f == null) {
-				System.out.println("Try something else\n");
+				System.err.println("Try a different search input\n");
 			} else {
 				for (Film f2 : f) {
 					System.out.println(f2);
-					for (Actor a : f2.getActor()) {
-						System.out.println(a);
+					if (f2.getActor() != null) {
+						for (Actor a : f2.getActor()) {
+							System.out.println(a);
+						}
+					}
+					else {
+						System.out.println("No actors");
 					}
 				}
 
 			}
-
-			startUserInterface(input);
 
 			break;
 		case 3:
 			System.out.println("exiting");
 			break;
 		default:
-			System.out.println("Not an option, try again");
-			startUserInterface(input);
+			System.err.println("Not an option, try again");
 			break;
 		}
-		sc.close();
+		if (user != 3) {
+			launch();
+		}
+		
 
+	}
+	public void filmById(Scanner input) {
+		int id = 0;
+		System.out.print("Enter film id: ");
+		try {
+			id = input.nextInt();
+		} catch (InputMismatchException e) {
+			input.nextLine();
+			System.out.println();
+		}
+
+		Film film = db.findFilmById(id);
+		if (film == null) {
+			System.err.println("\nInvalid ID, please try again\n");
+			filmById(input);
+		} else {
+			System.out.println(film);
+			if(film.getActor() != null) {
+			for (Actor a  : film.getActor()) {
+				System.out.println(a);
+			}
+			}
+			else {
+				System.out.println("No actors");
+			}
+		}
 	}
 
 }
