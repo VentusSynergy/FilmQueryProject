@@ -16,21 +16,6 @@ public class Film {
 	private String specialFeatures;
 	private List<Actor> actor;
 
-	public Film(int id, String title, String description, int releaseYear, String languageId, int rentalDuration,
-			double rentalRate, int length, double replacementCost, String rating, String specialFeatures) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.releaseYear = releaseYear;
-		this.languageId = languageId;
-		this.rentalDuration = rentalDuration;
-		this.rentalRate = rentalRate;
-		this.length = length;
-		this.replacementCost = replacementCost;
-		this.rating = rating;
-		this.specialFeatures = specialFeatures;
-	}
 
 	public Film(int id, String title, String description, int releaseYear, String languageId, int rentalDuration,
 			double rentalRate, int length, double replacementCost, String rating, String specialFeatures,
@@ -54,9 +39,6 @@ public class Film {
 		return actor;
 	}
 
-	public void setActor(List<Actor> actor) {
-		this.actor = actor;
-	}
 
 	public Film findFilmById(int filmId) {
 		return null;
